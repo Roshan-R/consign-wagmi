@@ -2,26 +2,27 @@ import { useEffect, useState } from 'react'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { Link } from "react-router-dom";
 
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+
 function Navbar() {
 
     const { connect, connectors, error, isLoading, pendingConnector } = useConnect()
+    const connector = new MetaMaskConnector()
 
-    const [addr, setAddr] = useState("");
-    const [isMultisig, setisMultiSig] = useState();
+    const [addr, setAddr] = useState<`0x${string}`>();
+    const [isMultisig, setisMultiSig] = useState<boolean>();
     const { address, isConnected } = useAccount();
 
     const { disconnect } = useDisconnect();
 
     function handleClick() {
-        console.log("Called me?")
-        isConnected ? disconnect() : connect({ connector: connectors.at(0) })
+        isConnected ? disconnect() : connect({ connector })
     }
 
 
     useEffect(() => {
-        console.log(connectors.at(0))
-        // setAddr(address)
-        // setisMultiSig(checkIsMultisig(address))
+        setAddr(address)
+        setisMultiSig(true)
     }, [address])
 
     return (
