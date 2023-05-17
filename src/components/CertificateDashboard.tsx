@@ -1,11 +1,13 @@
 import { useState } from "react";
 
+type address = `0x${string}`
+
 type Props = {
   title: string;
-  to_addr: string;
+  to_addr: address;
   image: string;
   num_approvals: number;
-  addrs: string[];
+  addrs: address[];
 };
 
 const CertificateDashboard = ({
