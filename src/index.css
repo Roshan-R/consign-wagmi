@@ -2,3 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .border-brutal{
+    border-left-width:2px;
+    border-top-width:2px;
+    border-right-width:4px;
+    border-bottom-width:4px;
+    border-color:black;
+  }
+  .border-brutal-hover{
+    border-bottom-width:8px;
+  }
+  .border-brutal-lg {
+    border-left-width:4px;
+    border-top-width:4px;
+    border-right-width:8px;
+    border-bottom-width:8px;
+    border-color:black;
+  } 
+}
+
+

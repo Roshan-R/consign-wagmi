@@ -29,7 +29,7 @@ function Navbar() {
         <div className="bg-main">
             <header className="z-50 flex w-full flex-wrap text-sm dark:bg-gray-800 sm:flex-nowrap sm:justify-start">
                 <nav className="w-full sm:flex sm:items-center sm:justify-between" aria-label="Global">
-                    <a className="flex-none bg-pp py-9 pr-9 pl-3 font-roboto text-3xl border-l-0 border-[4px] border-black" href="/">Consign</a>
+                    <Link className="flex-none bg-pp py-9 pr-9 pl-3 font-roboto text-3xl border-l-0 border-[4px] border-black" to="/">Consign</Link>
                     <div className="mt-5 flex flex-row items-center gap-7 sm:mt-0 sm:justify-end sm:pl-5">
                         {addr
                             ?
