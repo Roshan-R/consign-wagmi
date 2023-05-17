@@ -1,7 +1,7 @@
 type Props = {
   title: string;
   image: string;
-  description: string;
+  description?: string;
 };
 const NftCertificate = ({ title, image, description }: Props) => {
   return (
