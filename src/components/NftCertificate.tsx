@@ -14,4 +14,3 @@ const NftCertificate = ({ title, image, description }) => {
     );
 };
 export default NftCertificate;
-
