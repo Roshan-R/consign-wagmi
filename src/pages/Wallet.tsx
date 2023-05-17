@@ -13,18 +13,17 @@ function Wallet() {
     const roshan = "0xb089829772d86b570a9E7de8a1b1BBDB367704B1";
     const krisha = "0xc92aae0fa28EB56e78B33bCf24b427306816baCE";
 
-    function handleFormSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
+    function handleFormSubmit(e: any) {
         e.preventDefault();
-        const form = e.currentTarget
-        console.log(form.elements)
-        const formElements = form.elements as typeof form.elements & {
-            usernameInput: { value: string }
+        for (const x of e.target) {
+            if (x.value) {
+                adrs.push(x.value)
+            }
         }
-
-        for (const x of form.elements) {
-            console.log(x)
-        }
+        setAdrs(adrs)
         console.log(adrs)
+        console.log(maxInput)
+        console.log(minInput)
     }
 
     return (
