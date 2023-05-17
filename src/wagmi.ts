@@ -1,37 +1,26 @@
 import { configureChains, createConfig } from 'wagmi'
-import { goerli, mainnet } from 'wagmi/chains'
-import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
-import { InjectedConnector } from 'wagmi/connectors/injected'
+import { mainnet } from 'wagmi/chains'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 
-import { publicProvider } from 'wagmi/providers/public'
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
+
+
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, ...(import.meta.env?.MODE === 'development' ? [goerli] : [])],
-  [
-    publicProvider(),
-  ],
+    [mainnet],
+    [
+        jsonRpcProvider({
+            rpc: (chain) => ({ http: `https://74a7-2406-8800-81-88ca-8c65-ccd6-2d6c-c429.ngrok-free.app` })
+            ,
+        }),
+    ],
 )
 
 export const config = createConfig({
-  autoConnect: true,
-  connectors: [
-    new MetaMaskConnector({ chains }),
-    new CoinbaseWalletConnector({
-      chains,
-      options: {
-        appName: 'wagmi',
-      },
-    }),
-    new InjectedConnector({
-      chains,
-      options: {
-        name: 'Injected',
-        shimDisconnect: true,
-      },
-    }),
-  ],
-  publicClient,
-  webSocketPublicClient,
+    autoConnect: true,
+    connectors: [
+        new MetaMaskConnector({ chains }),
+    ],
+    publicClient,
+    webSocketPublicClient,
 })
