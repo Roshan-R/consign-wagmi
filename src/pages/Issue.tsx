@@ -10,9 +10,9 @@ import NftCertificate from "../components/NftCertificate";
 export default function Issue() {
   const [isloading, setIsLoading] = useState(false);
   const [file, setFile] = useState("");
-  const [f, setF] = useState();
+  const [f, setF] = useState<File>();
 
-  async function handleSubmit(event: any) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     // event.preventDefault();
     //
     // const name = event.target[0].value;
@@ -30,7 +30,8 @@ export default function Issue() {
     // toast.success('Successfully created certificate!')
   }
 
-  function handleFileChange(event: any) {
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (event.target.files == null) return
     const f = event.target.files[0];
     setF(f);
     setFile(URL.createObjectURL(f));
