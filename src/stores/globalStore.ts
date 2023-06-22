@@ -26,6 +26,8 @@ interface ConsignState {
     setTransactions: (transactions: Transaction[]) => void;
     owners: Address[];
     setOwners: (owners: Address[]) => void;
+    numConfirmation: number | null;
+    setNumConfirmation: (numConfirmation: number | null) => void;
   };
   resetState: () => void;
 }
@@ -82,6 +84,12 @@ const useConsignStore = create<ConsignState>()(
           set((state) => ({
             dashboardStore: { ...state.dashboardStore, owners },
           })),
+
+        numConfirmation: null,
+        setNumConfirmation: (numConfirmation: number | null) =>
+          set((state) => ({
+            dashboardStore: { ...state.dashboardStore, numConfirmation },
+          })),
       },
       resetState: () =>
         set((state) => ({
@@ -97,8 +105,10 @@ const useConsignStore = create<ConsignState>()(
           dashboardStore: {
             ...state.dashboardStore,
             wallet: undefined,
+            transactionCount: 0,
             transactions: [],
             owners: [],
+            numConfirmation: null,
           },
         })),
     }),
