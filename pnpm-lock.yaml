@@ -46,6 +46,9 @@ dependencies:
   web3-eth-abi:
     specifier: ^4.0.1
     version: 4.0.1
+  zustand:
+    specifier: ^4.3.8
+    version: 4.3.8(react@18.2.0)
 
 devDependencies:
   '@types/react':
