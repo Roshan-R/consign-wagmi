@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
-import { useAccount, useConnect, useDisconnect } from 'wagmi'
+import { useAccount, useConnect, useDisconnect, useContractRead } from 'wagmi'
 import { Link } from "react-router-dom";
-
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+import { MainFactory_addr } from '../addrs';
+import MainFactory from "../../consign-contracts/abi/MainFactory.json"
+
 
 function Navbar() {
 
-    const { connect, connectors, error, isLoading, pendingConnector } = useConnect()
+    const { connect } = useConnect()
     const connector = new MetaMaskConnector()
 
     const [addr, setAddr] = useState<`0x${string}`>();
@@ -14,6 +16,24 @@ function Navbar() {
     const { address, isConnected } = useAccount();
 
     const { disconnect } = useDisconnect();
+
+    const [proxy, setProxy] = useState("");
+
+    if (address) {
+
+        const { data: readData, isLoading: loadRead, isError } = useContractRead({
+            address: MainFactory_addr,
+            abi: MainFactory.abi,
+            functionName: 'multiSigWalletsOf',
+            args: [address],
+        })
+        useEffect(() => {
+            if (loadRead === false) {
+                localStorage.setItem("proxy_addr", readData[0] as any);
+            }
+        }, [loadRead])
+    }
+
 
     function handleClick() {
         isConnected ? disconnect() : connect({ connector })
@@ -38,7 +58,6 @@ function Navbar() {
                                     <Link className="font-medium font-roboto text-xl text-black hover:underline" to="/issue">Issue</Link> : <></>}
                                 <Link className="font-medium font-roboto text-xl text-black hover:underline" to="/profile">Profile</Link>
                                 <Link className="font-medium font-roboto text-xl text-black hover:underline" to="/wallet">Wallet</Link>
-                                <Link className="font-medium font-roboto text-xl text-black hover:underline" to="/dashboard">Dashboard</Link>
                             </>
                             : <></>}
                         <button onClick={handleClick} className="text-xl font-roboto font-bold mr-14 bg-peachh p-3 border-t-2 border-l-2 border-r-4 border-b-4 hover:border-b-8 border-black">

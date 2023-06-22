@@ -1,8 +1,10 @@
 import Navbar from '../components/Navbar';
 import Button from '../components/Button';
 import splash from '../assets/enterprise-eth.webp'
+import { useAccount } from 'wagmi';
 
 function Home() {
+    let _a = useAccount();
     return (
         <div className="h-screen bg-main font-roboto">
             <Navbar />

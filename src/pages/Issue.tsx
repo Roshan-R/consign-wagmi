@@ -1,34 +1,72 @@
 import { FaWallet } from "react-icons/fa";
 import Input from "../components/Input";
 import Navbar from "../components/Navbar";
-import { useState } from "react";
-import { toast } from "react-hot-toast";
+import { useEffect, useState } from "react";
 import SubmitButton from "../components/SubmitButton";
 import NftCertificate from "../components/NftCertificate";
+import {
+    useContractWrite,
+    useContractRead,
+    useWaitForTransaction,
+    useAccount,
+    usePrepareContractWrite
+} from 'wagmi'
+import { encodeFunctionData } from "viem";
+import { toast } from "react-hot-toast";
+import { Certificate_adr } from "../addrs";
 
-import mainabi from "../../consign-contracts/out/MainFactory.sol/MainFactory.json"
-import { useContractWrite } from 'wagmi'
+import Certificate from "../../consign-contracts/abi/Certificate.json";
+import MultiSigWallet from "../../consign-contracts/abi/MultiSigWallet.json";
 
+import MainFactory from "../../consign-contracts/abi/MainFactory.json"
+import { MainFactory_addr } from "../addrs";
 
 import storeIPFS from "../helpers/nftStorage";
 
 export default function Issue() {
+    const { address, isConnected } = useAccount();
 
-    const roshan = "0xb089829772d86b570a9E7de8a1b1BBDB367704B1"
-    const krishna = "0xc92aae0fa28EB56e78B33bCf24b427306816baCE"
-    const maincontractaddr = "0x9dBD1700B9492a6Ea192Ddf141FEce210017bd66"
+    const [toAddr, setToAddr] = useState('0xc92aae0fa28EB56e78B33bCf24b427306816baCE');
+    const [tokenURI, setTokenURI] = useState('ipfs://bafyreih6rzkhzoi7jcxmszxqqrewbo75tw64k72pmlebyucn5rbqq6n464/metadata.json');
 
-    const { data, isLoading, isSuccess, write } = useContractWrite({
-        address: maincontractaddr,
-        abi: mainabi.abi,
-        functionName: 'issueCertificate'
-    })
-
-
-
-    const [isloading, setIsLoading] = useState(false);
     const [file, setFile] = useState("");
     const [f, setF] = useState<File>();
+
+    // const roshan = "0xb089829772d86b570a9E7de8a1b1BBDB367704B1"
+    // const krishna = "0xc92aae0fa28EB56e78B33bCf24b427306816baCE"
+
+    const contracr_contract_addr = Certificate_adr;
+
+    const { data: readData, isLoading: loadRead, isError } = useContractRead({
+        address: MainFactory_addr,
+        abi: MainFactory.abi,
+        functionName: 'multiSigWalletsOf',
+        args: [address],
+    })
+
+    const encoded_data = encodeFunctionData({
+        abi: Certificate.abi,
+        functionName: 'issueCertificate',
+        args: [toAddr, tokenURI],
+    })
+
+    const { config } = usePrepareContractWrite({
+        address: readData[0] as `0x${string}`,
+        abi: MultiSigWallet.abi,
+        functionName: 'submitTransaction',
+        args: [contracr_contract_addr, 0, encoded_data],
+    })
+
+    console.log(config)
+
+    const { data, write } = useContractWrite(config)
+    const { isLoading, isSuccess } = useWaitForTransaction({
+        hash: data?.hash
+    })
+
+    if (isSuccess) {
+        toast.success('request successfully sent!')
+    }
 
     async function handleSubmit(event: any) {
         event.preventDefault();
@@ -36,19 +74,13 @@ export default function Issue() {
         const name = event.target[0].value;
         const addr = event.target[1].value;
 
-        setIsLoading(true);
-
         // let metadata_url = await storeIPFS(f!, name);
         // console.log(metadata_url)
 
         const metadata_url = "ipfs://bafyreih6rzkhzoi7jcxmszxqqrewbo75tw64k72pmlebyucn5rbqq6n464/metadata.json"
+        setTokenURI(metadata_url);
 
-        write({
-            args: [krishna, metadata_url]
-        })
-
-        setIsLoading(false);
-        // toast.success('Successfully created certificate!')
+        console.log(tokenURI, toAddr)
     }
 
     function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -89,11 +121,9 @@ export default function Issue() {
                 "
                             />
                         </label>
-                        <SubmitButton isloading={isloading}></SubmitButton>
+                        <SubmitButton disabled={!write} isLoading={isLoading} onClick={() => write?.()} />
                     </div>
                 </form>
-                {isLoading && <div>Looking</div>}
-                {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
 
                 {file ? (
                     <div className=" mx-32 my-16 w-2/5 ">

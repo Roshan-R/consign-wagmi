@@ -1,29 +1,73 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Input from "../components/Input";
+import SubmitButton from "../components/SubmitButton";
+
+import MainFactory from "../../consign-contracts/abi/MainFactory.json"
+import { useNavigate } from "react-router-dom";
+
+import {
+    useContractWrite,
+    useWaitForTransaction,
+    usePrepareContractWrite,
+    useAccount,
+    useContractRead
+} from 'wagmi'
+
+import { MainFactory_addr } from "../addrs";
 
 function Wallet() {
 
-    const [isLoading, setIsLoading] = useState(false);
+    const { address, isConnected } = useAccount();
+    const navigate = useNavigate();
+
+    const { data: readData, isLoading: loadRead, isError } = useContractRead({
+        address: MainFactory_addr,
+        abi: MainFactory.abi,
+        functionName: 'multiSigWalletsOf',
+        args: [address],
+    })
+
+    if (!loadRead) {
+        readData.length === 0 ? {} : navigate('/dashboard');
+    }
+    console.log(readData)
+    console.log(loadRead)
 
     const [maxInput, setMaxInput] = useState(3);
     const [minInput, setMinInput] = useState(2);
-    const [adrs, setAdrs] = useState<number[]>([]);
+    const [adrs, setAdrs] = useState<string[]>(
+        ["0x11d77214c1621EA0529357eA0179b294310b67A7", "0x3412879831a687ce0a752e37aF3bBf941884fB41", "0x19b41d78eA16fb99885bf6265add688a7EBE6DD6"]
+    );
 
     const roshan = "0xb089829772d86b570a9E7de8a1b1BBDB367704B1";
     const krisha = "0xc92aae0fa28EB56e78B33bCf24b427306816baCE";
 
+    const { config } = usePrepareContractWrite({
+        address: MainFactory_addr,
+        abi: MainFactory.abi,
+        functionName: 'createMultiSigWallet',
+        args: [adrs, minInput],
+    })
+
+    const { data, write } = useContractWrite(config)
+    const { isLoading, isSuccess } = useWaitForTransaction({
+        hash: data?.hash
+    })
+
     function handleFormSubmit(e: any) {
         e.preventDefault();
-        for (const x of e.target) {
-            if (x.value) {
-                adrs.push(x.value)
-            }
-        }
-        setAdrs(adrs)
+        console.log(maxInput, minInput)
         console.log(adrs)
-        console.log(maxInput)
-        console.log(minInput)
+        // for (const x of e.target) {
+        //     if (x.value) {
+        //         adrs.push(x.value)
+        //     }
+        // }
+        // setAdrs(adrs)
+        // console.log(adrs)
+        // console.log(maxInput)
+        // console.log(minInput)
     }
 
     return (
@@ -74,23 +118,7 @@ function Wallet() {
                             </div>
 
                             <div className="flex items-center justify-between">
-                                <button
-                                    type="submit"
-                                    className="mt-6 text-xl font-bold mr-14 bg-peachh p-3 border-t-2 border-l-2 border-r-4 border-b-4 hover:border-b-8 border-black"
-                                >
-                                    {isLoading ? (
-                                        <>
-                                            <span
-                                                className="animate-spin inline-block w-4 h-4 mr-2 border-[3px] border-current border-t-transparent text-black rounded-full"
-                                                role="status"
-                                                aria-label="loading"
-                                            ></span>
-                                            Loading
-                                        </>
-                                    ) : (
-                                        <>Submit</>
-                                    )}
-                                </button>
+                                <SubmitButton disabled={!write} isLoading={isLoading} onClick={() => write?.()} />
                             </div>
                         </form>
                     </div>
