@@ -20,6 +20,8 @@ interface ConsignState {
   dashboardStore: {
     wallet: Address;
     setWallet: (wallet: Address) => void;
+    transactionCount: number;
+    setTransactionCount: (transactionCount: number) => void;
     transactions: Transaction[];
     setTransactions: (transactions: Transaction[]) => void;
     owners: Address[];
@@ -30,7 +32,6 @@ interface ConsignState {
 
 const useConsignStore = create<ConsignState>()(
   devtools(
-
     (set, get) => ({
       isConnected: false,
       setIsConnected: (isConnected: boolean) => set({ isConnected }),
@@ -62,6 +63,12 @@ const useConsignStore = create<ConsignState>()(
         setWallet: (wallet: Address) =>
           set((state) => ({
             dashboardStore: { ...state.dashboardStore, wallet },
+          })),
+
+        transactionCount: 0,
+        setTransactionCount: (transactionCount: number) =>
+          set((state) => ({
+            dashboardStore: { ...state.dashboardStore, transactionCount },
           })),
 
         transactions: [],
@@ -96,7 +103,6 @@ const useConsignStore = create<ConsignState>()(
         })),
     }),
     { name: "consign-storage" }
-
   )
 );
 
