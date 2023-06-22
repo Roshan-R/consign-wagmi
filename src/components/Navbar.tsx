@@ -14,6 +14,7 @@ function Navbar() {
     address: reactiveAddress,
     isConnected: reactiveIsConnected,
     status: reactiveStatus,
+    isDisconnected,
   } = useAccount();
   const { disconnect } = useDisconnect();
 
@@ -28,6 +29,7 @@ function Navbar() {
     setHasMultiSigWallet,
     multiSigWallets,
     setMultiSigWallets,
+    resetState,
   ] = useConsignStore((state) => [
     state.address,
     state.setAddress,
@@ -39,6 +41,7 @@ function Navbar() {
     state.setHasMultiSigWallet,
     state.multiSigWallets,
     state.setMultiSigWallets,
+    state.resetState,
   ]);
 
   const { data, isError, isLoading } = useContractRead({
@@ -49,6 +52,10 @@ function Navbar() {
   });
 
   const multiSigWalletsData = data as Address[];
+
+  useEffect(() => {
+    if (!isConnected || isDisconnected) resetState();
+  }, [isDisconnected,isConnected]);
 
   useEffect(() => {
     setAddress(reactiveAddress);

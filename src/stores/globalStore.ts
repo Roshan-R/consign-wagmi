@@ -25,59 +25,78 @@ interface ConsignState {
     owners: Address[];
     setOwners: (owners: Address[]) => void;
   };
+  resetState: () => void;
 }
 
 const useConsignStore = create<ConsignState>()(
   devtools(
-    persist(
-      (set, get) => ({
-        isConnected: false,
-        setIsConnected: (isConnected: boolean) => set({ isConnected }),
 
-        status: "disconnected",
-        setStatus: (status: Status) => set({ status }),
+    (set, get) => ({
+      isConnected: false,
+      setIsConnected: (isConnected: boolean) => set({ isConnected }),
 
-        address: undefined,
-        setAddress: (address: Address) => set({ address }),
+      status: "disconnected",
+      setStatus: (status: Status) => set({ status }),
 
-        hasMultiSigWallet: false,
-        setHasMultiSigWallet: (hasMultiSigWallet: boolean) =>
-          set({ hasMultiSigWallet }),
+      address: undefined,
+      setAddress: (address: Address) => set({ address }),
 
-        multiSigWallets: [],
-        setMultiSigWallets: (multiSigWallets: Address[]) =>
-          set({ multiSigWallets }),
+      hasMultiSigWallet: false,
+      setHasMultiSigWallet: (hasMultiSigWallet: boolean) =>
+        set({ hasMultiSigWallet }),
 
-        profileStore: {
-          certificates: [],
-          setCertificates: (certificates: Certificate[]) =>
-            set((state) => ({
-              profileStore: { ...state.profileStore, certificates },
-            })),
-        },
+      multiSigWallets: [],
+      setMultiSigWallets: (multiSigWallets: Address[]) =>
+        set({ multiSigWallets }),
 
-        dashboardStore: {
-          wallet: undefined,
-          setWallet: (wallet: Address) =>
-            set((state) => ({
-              dashboardStore: { ...state.dashboardStore, wallet },
-            })),
+      profileStore: {
+        certificates: [],
+        setCertificates: (certificates: Certificate[]) =>
+          set((state) => ({
+            profileStore: { ...state.profileStore, certificates },
+          })),
+      },
 
-          transactions: [],
-          setTransactions: (transactions: Transaction[]) =>
-            set((state) => ({
-              dashboardStore: { ...state.dashboardStore, transactions },
-            })),
+      dashboardStore: {
+        wallet: undefined,
+        setWallet: (wallet: Address) =>
+          set((state) => ({
+            dashboardStore: { ...state.dashboardStore, wallet },
+          })),
 
-          owners: [],
-          setOwners: (owners: Address[]) =>
-            set((state) => ({
-              dashboardStore: { ...state.dashboardStore, owners },
-            })),
-        },
-      }),
-      { name: "consign-storage" }
-    )
+        transactions: [],
+        setTransactions: (transactions: Transaction[]) =>
+          set((state) => ({
+            dashboardStore: { ...state.dashboardStore, transactions },
+          })),
+
+        owners: [],
+        setOwners: (owners: Address[]) =>
+          set((state) => ({
+            dashboardStore: { ...state.dashboardStore, owners },
+          })),
+      },
+      resetState: () =>
+        set((state) => ({
+          isConnected: false,
+          status: "disconnected",
+          address: undefined,
+          hasMultiSigWallet: false,
+          multiSigWallets: [],
+          profileStore: {
+            ...state.profileStore,
+            certificates: [],
+          },
+          dashboardStore: {
+            ...state.dashboardStore,
+            wallet: undefined,
+            transactions: [],
+            owners: [],
+          },
+        })),
+    }),
+    { name: "consign-storage" }
+
   )
 );
 
