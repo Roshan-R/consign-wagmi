@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import { useAccount } from "wagmi";
+import { useAccount, useContractRead } from "wagmi";
 import CertificateDashboard from "../components/CertificateDashboard";
 import MultiSigWallet from "../../consign-contracts/abi/MultiSigWallet.json"
-
-import {
-    useContractRead,
-} from 'wagmi'
 
 type NFTResponse = {
     ownedNfts: {
@@ -18,15 +14,18 @@ type NFTResponse = {
 
 type NFTMetadata = {};
 
-import { MultiSigWallet_adr } from "../addrs";
+
 
 export default function Dashboard() {
+
     const { data, isError, isLoading } = useContractRead({
-        address: MultiSigWallet_adr,
+        address: "0x9a12072272fDC300308113B8C5ED324c5e245464",
         abi: MultiSigWallet.abi,
         functionName: 'getTransactionCount',
+        args: []
     })
-    console.log(data);
+    console.log(data, isError, isLoading)
+
     return (
         <div className="bg-main">
             <Navbar></Navbar>

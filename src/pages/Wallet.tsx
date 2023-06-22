@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Input from "../components/Input";
 import SubmitButton from "../components/SubmitButton";
@@ -18,21 +18,21 @@ import { MainFactory_addr } from "../addrs";
 
 function Wallet() {
 
-    const { address, isConnected } = useAccount();
+    const { address } = useAccount();
     const navigate = useNavigate();
-
-    const { data: readData, isLoading: loadRead, isError } = useContractRead({
+    const { data: readData, isLoading: loadRead } = useContractRead({
         address: MainFactory_addr,
         abi: MainFactory.abi,
         functionName: 'multiSigWalletsOf',
         args: [address],
     })
 
-    if (!loadRead) {
-        readData.length === 0 ? {} : navigate('/dashboard');
-    }
-    console.log(readData)
-    console.log(loadRead)
+    useEffect(() => {
+        if (loadRead === false) {
+            readData.length === 0 ? {} : navigate('/dashboard');
+        }
+    }, [loadRead]);
+
 
     const [maxInput, setMaxInput] = useState(3);
     const [minInput, setMinInput] = useState(2);

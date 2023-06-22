@@ -51,6 +51,7 @@ export default function Profile() {
                 if (!ignore) {
                     setLen(json.ownedNfts.length);
                     parseJson(json);
+                    console.log(json)
                 }
             });
         return () => {

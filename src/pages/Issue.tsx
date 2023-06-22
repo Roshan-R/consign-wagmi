@@ -37,12 +37,12 @@ export default function Issue() {
 
     const contracr_contract_addr = Certificate_adr;
 
-    const { data: readData, isLoading: loadRead, isError } = useContractRead({
-        address: MainFactory_addr,
-        abi: MainFactory.abi,
-        functionName: 'multiSigWalletsOf',
-        args: [address],
-    })
+    // const { data: readData, isLoading: loadRead, isError } = useContractRead({
+    //     address: MainFactory_addr,
+    //     abi: MainFactory.abi,
+    //     functionName: 'multiSigWalletsOf',
+    //     args: [address],
+    // })
 
     const encoded_data = encodeFunctionData({
         abi: Certificate.abi,
@@ -51,22 +51,20 @@ export default function Issue() {
     })
 
     const { config } = usePrepareContractWrite({
-        address: readData[0] as `0x${string}`,
+        address: "0x9a12072272fDC300308113B8C5ED324c5e245464",
         abi: MultiSigWallet.abi,
         functionName: 'submitTransaction',
         args: [contracr_contract_addr, 0, encoded_data],
     })
-
-    console.log(config)
 
     const { data, write } = useContractWrite(config)
     const { isLoading, isSuccess } = useWaitForTransaction({
         hash: data?.hash
     })
 
-    if (isSuccess) {
-        toast.success('request successfully sent!')
-    }
+    // if (isSuccess) {
+    //     toast.success('request successfully sent!')
+    // }
 
     async function handleSubmit(event: any) {
         event.preventDefault();
