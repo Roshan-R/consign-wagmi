@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import { useAccount, useContractRead, useContractReads } from "wagmi";
+import { useContractReads } from "wagmi";
 import CertificateDashboard from "../components/CertificateDashboard";
-import MultiSigWallet from "../../consign-contracts/abi/MultiSigWallet.json"
-import { Certificate_adr } from "../addrs";
 import Certificate from "../../consign-contracts/abi/Certificate.json"
-import { AbiItem, decodeFunctionData } from 'viem'
-import { AbiEvent } from 'abitype'
-import type { ExtractAbiFunctions, ExtractAbiFunctionNames, AbiParametersToPrimitiveTypes, ExtractAbiFunction } from 'abitype'
+import { decodeFunctionData } from 'viem'
+import type { ExtractAbiFunctionNames, AbiParametersToPrimitiveTypes, ExtractAbiFunction } from 'abitype'
 
-import { multisig_abi } from "../abi";
-import { ExtractAbiEvent } from 'abitype'
-
+type CertificateType = {
+    num_approvals: BigInt,
+    title: string,
+    image: string,
+    to_addr: `0x${string}`,
+}
 
 const abi = [
     {
@@ -412,20 +412,31 @@ const abi = [
 ] as const;
 
 
-
-
-
-type NFTResponse = {
-    ownedNfts: {
-        tokenUri: {
-            gateway: string;
-        };
-    }[];
-};
-
-type NFTMetadata = {};
-
 export default function Dashboard() {
+
+
+    const [datas, setDatas] = useState<Array<CertificateType>>([]);
+    useEffect(() => {
+        console.log("The datas from the usestate shit ", datas)
+    }, [datas])
+
+    function List() {
+        const half = datas.length;
+
+        const itemList = datas.slice(half).map((item) => (
+            <CertificateDashboard
+                num_approvals={item.num_approvals}
+                title={item.title}
+                image={item.image}
+                to_addr={item.to_addr as `0x${string}`}
+            ></CertificateDashboard>
+        ));
+        return (
+            <div className="grid grid-cols-3 gap-6">
+                {itemList}
+            </div>
+        );
+    }
 
     // const { data, isError, isLoading } = useContractRead({
     //     address: "0x9a12072272fDC300308113B8C5ED324c5e245464",
@@ -452,30 +463,43 @@ export default function Dashboard() {
 
     })
 
-    const { data, isError, isLoading } = useContractReads({
+    const { data }: { data: Array<any> | undefined } = useContractReads({
         contracts
     })
-    console.log(data)
 
-    //
-    //
-    // const { data, isError, isLoading } = useContractRead({
-    //     address: "0x9a12072272fDC300308113B8C5ED324c5e245464",
-    //     abi: MultiSigWallet.abi,
-    //     functionName: 'getTransaction',
-    //     args: [0]
-    // })
-    //
-    // useEffect(() => {
-    //     if (data) {
-    //         const { functionName, args } = decodeFunctionData({
-    //             abi: Certificate.abi,
-    //             data: data[2]
-    //         })
-    //         console.log(functionName, args)
-    //     }
-    // }, [data])
-    //
+
+    useEffect(() => {
+
+        async function createCertificateData(cert_data: any) {
+            if (cert_data) {
+                for (let i = 0; i < cert_data.length; i++) {
+                    const item = cert_data[i];
+
+                    const { functionName, args }: { functionName: string, args: any } = decodeFunctionData({
+                        abi: Certificate.abi,
+                        data: item.result[2]
+                    })
+
+                    console.log(functionName, args[1])
+                    const metadataResponse = await fetch(args[1].replace('ipfs://', 'https://gateway.ipfs.io/ipfs/'));
+                    const metadata = await metadataResponse.json();
+
+                    const mappedItem = {
+                        num_approvals: item.result[4],
+                        to_addr: item.result[0],
+                        title: metadata.name,
+                        image: metadata.image.replace('ipfs://', 'https://gateway.ipfs.io/ipfs/'),
+                    };
+
+                    console.log(mappedItem)
+                    setDatas(datas => [...datas, mappedItem]);
+                }
+
+            }
+        }
+        console.log(datas)
+        createCertificateData(data)
+    }, [data]);
 
     return (
         <div className="bg-main">
@@ -489,69 +513,8 @@ export default function Dashboard() {
                 <div className="text-2xl font-roboto mb-2">
                     Certificates Pending Decision
                 </div>
-                <div className="grid grid-cols-3 gap-6">
-                    <CertificateDashboard
-                        num_approvals={2}
-                        title="Drishti Certificate"
-                        image="https://picsum.photos/350/400"
-                        to_addr="0x99Eb13B75D0BAFEf658cdFCE4047474F8023feCf"
-                        addrs={[
-                            "0x0E42B72b0937eF6cd07d312E9F4FaEffc73dc7e7",
-                            "0x99Eb13B75D0BAFEf658cdFCE4047474F8023feCf",
-                        ]}
-                    ></CertificateDashboard>
-                    <CertificateDashboard
-                        num_approvals={2}
-                        title="Drishti Certificate"
-                        image="https://picsum.photos/350/400"
-                        to_addr="0x99Eb13B75D0BAFEf658cdFCE4047474F8023feCf"
-                        addrs={[
-                            "0x0E42B72b0937eF6cd07d312E9F4FaEffc73dc7e7",
-                            "0x99Eb13B75D0BAFEf658cdFCE4047474F8023feCf",
-                        ]}
-                    ></CertificateDashboard>
-                    <CertificateDashboard
-                        num_approvals={2}
-                        title="Drishti Certificate"
-                        image="https://picsum.photos/350/400"
-                        to_addr="0x99Eb13B75D0BAFEf658cdFCE4047474F8023feCf"
-                        addrs={[
-                            "0x0E42B72b0937eF6cd07d312E9F4FaEffc73dc7e7",
-                            "0x99Eb13B75D0BAFEf658cdFCE4047474F8023feCf",
-                        ]}
-                    ></CertificateDashboard>
-                    <CertificateDashboard
-                        num_approvals={2}
-                        title="Drishti Certificate"
-                        image="https://picsum.photos/350/400"
-                        to_addr="0x99Eb13B75D0BAFEf658cdFCE4047474F8023feCf"
-                        addrs={[
-                            "0x0E42B72b0937eF6cd07d312E9F4FaEffc73dc7e7",
-                            "0x99Eb13B75D0BAFEf658cdFCE4047474F8023feCf",
-                        ]}
-                    ></CertificateDashboard>
-                    <CertificateDashboard
-                        num_approvals={2}
-                        title="Drishti Certificate"
-                        image="https://picsum.photos/350/400"
-                        to_addr="0x99Eb13B75D0BAFEf658cdFCE4047474F8023feCf"
-                        addrs={[
-                            "0x0E42B72b0937eF6cd07d312E9F4FaEffc73dc7e7",
-                            "0x99Eb13B75D0BAFEf658cdFCE4047474F8023feCf",
-                        ]}
-                    ></CertificateDashboard>
-                    <CertificateDashboard
-                        num_approvals={2}
-                        title="Drishti Certificate"
-                        image="https://picsum.photos/350/400"
-                        to_addr="0x99Eb13B75D0BAFEf658cdFCE4047474F8023feCf"
-                        addrs={[
-                            "0x0E42B72b0937eF6cd07d312E9F4FaEffc73dc7e7",
-                            "0x99Eb13B75D0BAFEf658cdFCE4047474F8023feCf",
-                        ]}
-                    ></CertificateDashboard>
-                </div>
+                <List></List>
             </div>
-        </div>
+        </div >
     );
 }
