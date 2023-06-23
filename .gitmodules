@@ -1,0 +1,3 @@
+[submodule "consign-contracts"]
+	path = consign-contracts
+	url = https://github.com/consign-project/consign-contracts/
