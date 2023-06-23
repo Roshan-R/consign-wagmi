@@ -34,6 +34,7 @@ export default function Issue() {
   const [tokenURI, setTokenURI] = useState("");
   const [encodedData, setEncodedData] = useState("");
   const [canWriteTransaction, setCanWriteTransaction] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [fileName, setFileName] = useState("");
   const [file, setFile] = useState<File>();
@@ -43,7 +44,12 @@ export default function Issue() {
 
   const certificateAddress = import.meta.env.CERTIFICATE_ADDRESS;
 
-  const { data, isLoading, isSuccess, write } = useContractWrite({
+  const {
+    data,
+    isLoading: isLoadingContractWrite,
+    isSuccess,
+    write,
+  } = useContractWrite({
     address: multiSigWallets[0],
     abi: MultiSigWallet.abi,
     functionName: "submitTransaction",
@@ -64,11 +70,25 @@ export default function Issue() {
     }
   }, [file]);
 
+  useEffect(() => {
+    if (!isLoadingContractWrite) {
+      setIsLoading(false);
+    }
+  }, [isLoadingContractWrite]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Certificate issue request successfully sent!");
+      // TODO: go to dashboard
+    }
+  }, [isSuccess]);
+
   // if (isSuccess) {
   //     toast.success('request successfully sent!')
   // }
 
   async function handleSubmit(event: any) {
+    setIsLoading(true);
     event.preventDefault();
 
     const name = event.target[0].value;
@@ -145,10 +165,8 @@ export default function Issue() {
               }
               value={description}
             />
-            // <FaWallet />
             <label className="block text-gray-700 text-xl font-bold font-roboto">
               Image file
-              <span className="sr-only">Choose profile photo</span>
               <input
                 type="file"
                 onChange={handleFileChange}
