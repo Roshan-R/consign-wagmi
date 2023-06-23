@@ -217,9 +217,9 @@ export default function Dashboard() {
                 <div className="text-2xl font-roboto mb-2">
                     Certificates Pending Decision
                 </div>
-                {datas.map((item, index) => {
-                    return (
-                        <div className="grid grid-cols-3 gap-6">
+                <div className="grid grid-cols-3 gap-6">
+                    {datas.map((item, index) => {
+                        return (
                             <CertificateDashboard
                                 index={index}
                                 num_approvals={item.num_approvals}
@@ -228,9 +228,9 @@ export default function Dashboard() {
                                 to_addr={item.to_addr}
                                 numConfirmationRequired={numConfirmation!}
                             ></CertificateDashboard>
-                        </div>
-                    );
-                })}
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );
