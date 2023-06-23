@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { useContractReads, useContractRead } from "wagmi";
 import CertificateDashboard from "../components/CertificateDashboard";
+
 import Certificate from "../../consign-contracts/abi/Certificate.json";
 import { Address, decodeFunctionData } from "viem";
 import type {
@@ -9,6 +10,7 @@ import type {
     AbiParametersToPrimitiveTypes,
     ExtractAbiFunction,
 } from "abitype";
+
 import { multiSigWalletAbi } from "../abi";
 
 type CertificateType = {

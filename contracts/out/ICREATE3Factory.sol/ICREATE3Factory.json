@@ -1,0 +1,486 @@
+{
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "salt",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes",
+          "name": "creationCode",
+          "type": "bytes"
+        }
+      ],
+      "name": "deploy",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "deployed",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "deployer",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "salt",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getDeployed",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "deployed",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "deploy(bytes32,bytes)": "cdcb760a",
+    "getDeployed(address,bytes32)": "50f1c464"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"creationCode\",\"type\":\"bytes\"}],\"name\":\"deploy\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"deployed\",\"type\":\"address\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"deployer\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"salt\",\"type\":\"bytes32\"}],\"name\":\"getDeployed\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"deployed\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"zefram.eth\",\"kind\":\"dev\",\"methods\":{\"deploy(bytes32,bytes)\":{\"details\":\"The provided salt is hashed together with msg.sender to generate the final salt\",\"params\":{\"creationCode\":\"The creation code of the contract to deploy\",\"salt\":\"The deployer-specific salt for determining the deployed contract's address\"},\"returns\":{\"deployed\":\"The address of the deployed contract\"}},\"getDeployed(address,bytes32)\":{\"details\":\"The provided salt is hashed together with the deployer address to generate the final salt\",\"params\":{\"deployer\":\"The deployer account that will call deploy()\",\"salt\":\"The deployer-specific salt for determining the deployed contract's address\"},\"returns\":{\"deployed\":\"The address of the contract that will be deployed\"}}},\"title\":\"Factory for deploying contracts to deterministic addresses via CREATE3\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"deploy(bytes32,bytes)\":{\"notice\":\"Deploys a contract using CREATE3\"},\"getDeployed(address,bytes32)\":{\"notice\":\"Predicts the address of a deployed contract\"}},\"notice\":\"Enables deploying contracts using CREATE3. Each deployer (msg.sender) has its own namespace for deployed addresses.\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"lib/create3-factory/src/ICREATE3Factory.sol\":\"ICREATE3Factory\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":1000000},\"remappings\":[\":@openzeppelin/=lib/openzeppelin-contracts/\",\":create3-factory/=lib/create3-factory/\",\":ds-test/=lib/forge-std/lib/ds-test/src/\",\":forge-std/=lib/forge-std/src/\",\":gsn/=lib/gsn/\",\":openzeppelin-contracts/=lib/openzeppelin-contracts/\",\":solmate/=lib/create3-factory/lib/solmate/src/\"]},\"sources\":{\"lib/create3-factory/src/ICREATE3Factory.sol\":{\"keccak256\":\"0xb56e25e1e00887c2faa59d13614b5dc34e4d582f654f94388bd89ae92bbcbc90\",\"license\":\"AGPL-3.0\",\"urls\":[\"bzz-raw://2eb71aa888a36568f30305e90f138dc642e4e8ecc741d06fa3c68b056bc57a98\",\"dweb:/ipfs/QmbcpW4PAGi12YT2YozveUVBfDNX3s4SWFVRK16ugaHa4o\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.17+commit.8df45f5f"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "salt",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes",
+              "name": "creationCode",
+              "type": "bytes"
+            }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "deploy",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "deployed",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "deployer",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "salt",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getDeployed",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "deployed",
+              "type": "address"
+            }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "deploy(bytes32,bytes)": {
+            "details": "The provided salt is hashed together with msg.sender to generate the final salt",
+            "params": {
+              "creationCode": "The creation code of the contract to deploy",
+              "salt": "The deployer-specific salt for determining the deployed contract's address"
+            },
+            "returns": {
+              "deployed": "The address of the deployed contract"
+            }
+          },
+          "getDeployed(address,bytes32)": {
+            "details": "The provided salt is hashed together with the deployer address to generate the final salt",
+            "params": {
+              "deployer": "The deployer account that will call deploy()",
+              "salt": "The deployer-specific salt for determining the deployed contract's address"
+            },
+            "returns": {
+              "deployed": "The address of the contract that will be deployed"
+            }
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "deploy(bytes32,bytes)": {
+            "notice": "Deploys a contract using CREATE3"
+          },
+          "getDeployed(address,bytes32)": {
+            "notice": "Predicts the address of a deployed contract"
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        ":@openzeppelin/=lib/openzeppelin-contracts/",
+        ":create3-factory/=lib/create3-factory/",
+        ":ds-test/=lib/forge-std/lib/ds-test/src/",
+        ":forge-std/=lib/forge-std/src/",
+        ":gsn/=lib/gsn/",
+        ":openzeppelin-contracts/=lib/openzeppelin-contracts/",
+        ":solmate/=lib/create3-factory/lib/solmate/src/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 1000000
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "lib/create3-factory/src/ICREATE3Factory.sol": "ICREATE3Factory"
+      },
+      "libraries": {}
+    },
+    "sources": {
+      "lib/create3-factory/src/ICREATE3Factory.sol": {
+        "keccak256": "0xb56e25e1e00887c2faa59d13614b5dc34e4d582f654f94388bd89ae92bbcbc90",
+        "urls": [
+          "bzz-raw://2eb71aa888a36568f30305e90f138dc642e4e8ecc741d06fa3c68b056bc57a98",
+          "dweb:/ipfs/QmbcpW4PAGi12YT2YozveUVBfDNX3s4SWFVRK16ugaHa4o"
+        ],
+        "license": "AGPL-3.0"
+      }
+    },
+    "version": 1
+  },
+  "ast": {
+    "absolutePath": "lib/create3-factory/src/ICREATE3Factory.sol",
+    "id": 243,
+    "exportedSymbols": {
+      "ICREATE3Factory": [
+        242
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "37:1320:3",
+    "nodes": [
+      {
+        "id": 220,
+        "nodeType": "PragmaDirective",
+        "src": "37:24:3",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          ">=",
+          "0.6",
+          ".0"
+        ]
+      },
+      {
+        "id": 242,
+        "nodeType": "ContractDefinition",
+        "src": "300:1056:3",
+        "nodes": [
+          {
+            "id": 231,
+            "nodeType": "FunctionDefinition",
+            "src": "703:125:3",
+            "nodes": [],
+            "documentation": {
+              "id": 222,
+              "nodeType": "StructuredDocumentation",
+              "src": "332:366:3",
+              "text": "@notice Deploys a contract using CREATE3\n @dev The provided salt is hashed together with msg.sender to generate the final salt\n @param salt The deployer-specific salt for determining the deployed contract's address\n @param creationCode The creation code of the contract to deploy\n @return deployed The address of the deployed contract"
+            },
+            "functionSelector": "cdcb760a",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "deploy",
+            "nameLocation": "712:6:3",
+            "parameters": {
+              "id": 227,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 224,
+                  "mutability": "mutable",
+                  "name": "salt",
+                  "nameLocation": "727:4:3",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 231,
+                  "src": "719:12:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 223,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "719:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 226,
+                  "mutability": "mutable",
+                  "name": "creationCode",
+                  "nameLocation": "746:12:3",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 231,
+                  "src": "733:25:3",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 225,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "733:5:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "718:41:3"
+            },
+            "returnParameters": {
+              "id": 230,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 229,
+                  "mutability": "mutable",
+                  "name": "deployed",
+                  "nameLocation": "818:8:3",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 231,
+                  "src": "810:16:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 228,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "810:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "809:18:3"
+            },
+            "scope": 242,
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 241,
+            "nodeType": "FunctionDefinition",
+            "src": "1236:118:3",
+            "nodes": [],
+            "documentation": {
+              "id": 232,
+              "nodeType": "StructuredDocumentation",
+              "src": "834:397:3",
+              "text": "@notice Predicts the address of a deployed contract\n @dev The provided salt is hashed together with the deployer address to generate the final salt\n @param deployer The deployer account that will call deploy()\n @param salt The deployer-specific salt for determining the deployed contract's address\n @return deployed The address of the contract that will be deployed"
+            },
+            "functionSelector": "50f1c464",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getDeployed",
+            "nameLocation": "1245:11:3",
+            "parameters": {
+              "id": 237,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 234,
+                  "mutability": "mutable",
+                  "name": "deployer",
+                  "nameLocation": "1265:8:3",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 241,
+                  "src": "1257:16:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 233,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1257:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 236,
+                  "mutability": "mutable",
+                  "name": "salt",
+                  "nameLocation": "1283:4:3",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 241,
+                  "src": "1275:12:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 235,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1275:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1256:32:3"
+            },
+            "returnParameters": {
+              "id": 240,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 239,
+                  "mutability": "mutable",
+                  "name": "deployed",
+                  "nameLocation": "1344:8:3",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 241,
+                  "src": "1336:16:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 238,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1336:7:3",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1335:18:3"
+            },
+            "scope": 242,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "ICREATE3Factory",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 221,
+          "nodeType": "StructuredDocumentation",
+          "src": "63:237:3",
+          "text": "@title Factory for deploying contracts to deterministic addresses via CREATE3\n @author zefram.eth\n @notice Enables deploying contracts using CREATE3. Each deployer (msg.sender) has\n its own namespace for deployed addresses."
+        },
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          242
+        ],
+        "name": "ICREATE3Factory",
+        "nameLocation": "310:15:3",
+        "scope": 243,
+        "usedErrors": []
+      }
+    ],
+    "license": "AGPL-3.0"
+  },
+  "id": 3
+}

@@ -1,4 +1,4 @@
-import MainFactory from "../../consign-contracts/abi/MainFactory.json";
+import MainFactory from "../../contracts/abi/MainFactory.json";
 
 
 function createMultiSigWallet(address: Array<String>, _numConfirmationsRequired: number) {
