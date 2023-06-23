@@ -20,7 +20,7 @@ function Wallet() {
 
     const { address } = useAccount();
     const navigate = useNavigate();
-    const { data: readData, isLoading: loadRead } = useContractRead({
+    const { data: readData, isLoading: loadRead }: { data: any, isLoading: boolean } = useContractRead({
         address: MainFactory_addr,
         abi: MainFactory.abi,
         functionName: 'multiSigWalletsOf',
