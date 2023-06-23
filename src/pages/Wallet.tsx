@@ -36,38 +36,32 @@ function Wallet() {
 
     const [maxInput, setMaxInput] = useState(3);
     const [minInput, setMinInput] = useState(2);
-    const [adrs, setAdrs] = useState<string[]>(
-        ["0x11d77214c1621EA0529357eA0179b294310b67A7", "0x3412879831a687ce0a752e37aF3bBf941884fB41", "0x19b41d78eA16fb99885bf6265add688a7EBE6DD6"]
-    );
+    const [adrs, setAdrs] = useState<string[]>([]);
 
-    const roshan = "0xb089829772d86b570a9E7de8a1b1BBDB367704B1";
-    const krisha = "0xc92aae0fa28EB56e78B33bCf24b427306816baCE";
 
-    const { config } = usePrepareContractWrite({
-        address: MainFactory_addr,
+    const { write } = useContractWrite({
+        address: import.meta.env.VITE_MAIN_FACTORY_ADDRESS,
         abi: MainFactory.abi,
         functionName: 'createMultiSigWallet',
-        args: [adrs, minInput],
     })
 
-    const { data, write } = useContractWrite(config)
-    const { isLoading, isSuccess } = useWaitForTransaction({
-        hash: data?.hash
-    })
+    const { isLoading } = useWaitForTransaction({})
 
     function handleFormSubmit(e: any) {
         e.preventDefault();
         console.log(maxInput, minInput)
         console.log(adrs)
-        // for (const x of e.target) {
-        //     if (x.value) {
-        //         adrs.push(x.value)
-        //     }
-        // }
-        // setAdrs(adrs)
-        // console.log(adrs)
-        // console.log(maxInput)
-        // console.log(minInput)
+        for (const x of e.target) {
+            if (x.value) {
+                adrs.push(x.value)
+            }
+        }
+        console.log(adrs)
+        setAdrs(adrs)
+
+        write({
+            args: [adrs, minInput],
+        })
     }
 
     return (
@@ -118,7 +112,7 @@ function Wallet() {
                             </div>
 
                             <div className="flex items-center justify-between">
-                                <SubmitButton disabled={!write} isLoading={isLoading} onClick={() => write?.()} />
+                                <SubmitButton isLoading={isLoading} onClick={() => write?.()} />
                             </div>
                         </form>
                     </div>
