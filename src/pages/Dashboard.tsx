@@ -25,19 +25,20 @@ export default function Dashboard() {
     multiSigWallets,
     wallet,
     setWallet,
-    // setTransactionCount,
-    // transactions,
-    // setTransactions,
+    transactionCount,
+    setTransactionCount,
+    transactions,
+    setTransactions,
     numConfirmation,
     setNumConfirmation,
   ] = useConsignStore((state) => [
     state.multiSigWallets,
     state.dashboardStore.wallet,
     state.dashboardStore.setWallet,
-    // state.dashboardStore.transactionCount,
-    // state.dashboardStore.setTransactionCount,
-    // state.dashboardStore.transactions,
-    // state.dashboardStore.setTransactions,
+    state.dashboardStore.transactionCount,
+    state.dashboardStore.setTransactionCount,
+    state.dashboardStore.transactions,
+    state.dashboardStore.setTransactions,
     state.dashboardStore.numConfirmation,
     state.dashboardStore.setNumConfirmation,
   ]);
@@ -66,7 +67,6 @@ export default function Dashboard() {
     return <div className="grid grid-cols-3 gap-6">{itemList}</div>;
   }
 
-  let transactionCount = 10;
 
   let contracts: {
     address: `0x${string}` | undefined;
@@ -101,6 +101,18 @@ export default function Dashboard() {
     if (!numConfirmationData) return;
     setNumConfirmation(Number(numConfirmationData));
   }, [numConfirmationData]);
+
+  const { data: transactionCountData } = useContractRead({
+    address: multiSigWallets[0],
+    abi: multiSigWalletAbi,
+    functionName: "getTransactionCount",
+  });
+
+  useEffect(() => {
+    console.log("transactionCountData :", transactionCountData);
+    if (!transactionCountData) return;
+    setTransactionCount(Number(transactionCountData));
+  }, [transactionCountData]);
 
   useEffect(() => {
     console.log("multiSigWallets :", multiSigWallets);
