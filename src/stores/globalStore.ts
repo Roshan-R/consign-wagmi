@@ -20,64 +20,99 @@ interface ConsignState {
   dashboardStore: {
     wallet: Address;
     setWallet: (wallet: Address) => void;
+    transactionCount: number;
+    setTransactionCount: (transactionCount: number) => void;
     transactions: Transaction[];
     setTransactions: (transactions: Transaction[]) => void;
     owners: Address[];
     setOwners: (owners: Address[]) => void;
+    numConfirmation: number | null;
+    setNumConfirmation: (numConfirmation: number | null) => void;
   };
+  resetState: () => void;
 }
 
 const useConsignStore = create<ConsignState>()(
   devtools(
-    persist(
-      (set, get) => ({
-        isConnected: false,
-        setIsConnected: (isConnected: boolean) => set({ isConnected }),
+    (set, get) => ({
+      isConnected: false,
+      setIsConnected: (isConnected: boolean) => set({ isConnected }),
 
-        status: "disconnected",
-        setStatus: (status: Status) => set({ status }),
+      status: "disconnected",
+      setStatus: (status: Status) => set({ status }),
 
-        address: undefined,
-        setAddress: (address: Address) => set({ address }),
+      address: undefined,
+      setAddress: (address: Address) => set({ address }),
 
-        hasMultiSigWallet: false,
-        setHasMultiSigWallet: (hasMultiSigWallet: boolean) =>
-          set({ hasMultiSigWallet }),
+      hasMultiSigWallet: false,
+      setHasMultiSigWallet: (hasMultiSigWallet: boolean) =>
+        set({ hasMultiSigWallet }),
 
-        multiSigWallets: [],
-        setMultiSigWallets: (multiSigWallets: Address[]) =>
-          set({ multiSigWallets }),
+      multiSigWallets: [],
+      setMultiSigWallets: (multiSigWallets: Address[]) =>
+        set({ multiSigWallets }),
 
-        profileStore: {
-          certificates: [],
-          setCertificates: (certificates: Certificate[]) =>
-            set((state) => ({
-              profileStore: { ...state.profileStore, certificates },
-            })),
-        },
+      profileStore: {
+        certificates: [],
+        setCertificates: (certificates: Certificate[]) =>
+          set((state) => ({
+            profileStore: { ...state.profileStore, certificates },
+          })),
+      },
 
-        dashboardStore: {
-          wallet: undefined,
-          setWallet: (wallet: Address) =>
-            set((state) => ({
-              dashboardStore: { ...state.dashboardStore, wallet },
-            })),
+      dashboardStore: {
+        wallet: undefined,
+        setWallet: (wallet: Address) =>
+          set((state) => ({
+            dashboardStore: { ...state.dashboardStore, wallet },
+          })),
 
-          transactions: [],
-          setTransactions: (transactions: Transaction[]) =>
-            set((state) => ({
-              dashboardStore: { ...state.dashboardStore, transactions },
-            })),
+        transactionCount: 0,
+        setTransactionCount: (transactionCount: number) =>
+          set((state) => ({
+            dashboardStore: { ...state.dashboardStore, transactionCount },
+          })),
 
-          owners: [],
-          setOwners: (owners: Address[]) =>
-            set((state) => ({
-              dashboardStore: { ...state.dashboardStore, owners },
-            })),
-        },
-      }),
-      { name: "consign-storage" }
-    )
+        transactions: [],
+        setTransactions: (transactions: Transaction[]) =>
+          set((state) => ({
+            dashboardStore: { ...state.dashboardStore, transactions },
+          })),
+
+        owners: [],
+        setOwners: (owners: Address[]) =>
+          set((state) => ({
+            dashboardStore: { ...state.dashboardStore, owners },
+          })),
+
+        numConfirmation: null,
+        setNumConfirmation: (numConfirmation: number | null) =>
+          set((state) => ({
+            dashboardStore: { ...state.dashboardStore, numConfirmation },
+          })),
+      },
+      resetState: () =>
+        set((state) => ({
+          isConnected: false,
+          status: "disconnected",
+          address: undefined,
+          hasMultiSigWallet: false,
+          multiSigWallets: [],
+          profileStore: {
+            ...state.profileStore,
+            certificates: [],
+          },
+          dashboardStore: {
+            ...state.dashboardStore,
+            wallet: undefined,
+            transactionCount: 0,
+            transactions: [],
+            owners: [],
+            numConfirmation: null,
+          },
+        })),
+    }),
+    { name: "consign-storage" }
   )
 );
 

@@ -1,21 +1,87 @@
 import { useState } from "react";
+import { multiSigWalletAbi } from "../abi";
+import useConsignStore from "../stores/globalStore";
+import { useContractWrite } from "wagmi";
 
 type address = `0x${string}`
 
 type Props = {
+    index: number;
     title: string;
     to_addr: address;
     image: string;
     num_approvals: BigInt;
 };
 
+
 const CertificateDashboard = ({
+    index,
     title,
     to_addr,
     image,
     num_approvals,
 }: Props) => {
     const [showModal, setShowModal] = useState(false);
+
+    const [
+        multiSigWallets,
+        wallet,
+        setWallet,
+        setTransactionCount,
+        transactions,
+        setTransactions,
+        numConfirmation,
+        setNumConfirmation,
+    ] = useConsignStore((state) => [
+        state.multiSigWallets,
+        state.dashboardStore.wallet,
+        state.dashboardStore.setWallet,
+        state.dashboardStore.transactionCount,
+        state.dashboardStore.setTransactionCount,
+        state.dashboardStore.transactions,
+        state.dashboardStore.setTransactions,
+        state.dashboardStore.numConfirmation,
+        state.dashboardStore.setNumConfirmation,
+    ]);
+
+
+    function ApporoveTransaction() {
+        console.log("Clicked Approve", multiSigWallets[0], index)
+        writeConfirm()
+    }
+
+    function RevokeTransaction() {
+        console.log("Clicked Revoke", multiSigWallets[0], index)
+        writeRevoke()
+    }
+
+    function ExecuteTransaction() {
+        console.log("Clicked Execute", multiSigWallets[0], index)
+        writeExecute()
+    }
+
+
+    const { write: writeConfirm } = useContractWrite({
+        address: multiSigWallets[0],
+        abi: multiSigWalletAbi,
+        functionName: 'confirmTransaction',
+        args: [BigInt(index)]
+    })
+
+    const { write: writeRevoke } = useContractWrite({
+        address: multiSigWallets[0],
+        abi: multiSigWalletAbi,
+        functionName: 'revokeConfirmation',
+        args: [BigInt(index)]
+    })
+
+    const { write: writeExecute } = useContractWrite({
+        address: multiSigWallets[0],
+        abi: multiSigWalletAbi,
+        functionName: 'executeTransaction',
+        args: [BigInt(index)]
+    })
+
 
     return (
         <div className="border-brutal bg-white flex flex-col">
@@ -29,12 +95,15 @@ const CertificateDashboard = ({
                         </div>
 
                         <div className="flex flex-col gap-2 justify-center">
-                            <div className="bg-greenn w-19 border-brutal fill-white hover:border-brutal-hover">
+                            <button onClick={ApporoveTransaction} className="bg-greenn w-19 border-brutal fill-white hover:border-brutal-hover">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                     <path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
                                 </svg>
-                            </div>
-                            <div className="bg-redd border-brutal p-1 fill-white hover:border-brutal-hover ">
+                            </button>
+                            <button onClick={ExecuteTransaction} className="bg-greenn w-19 border-brutal fill-white hover:border-brutal-hover">
+                                Execute
+                            </button>
+                            <button onClick={RevokeTransaction} className="bg-redd border-brutal p-1 fill-white hover:border-brutal-hover ">
                                 <svg
                                     width="25"
                                     height="25"
@@ -47,7 +116,7 @@ const CertificateDashboard = ({
                                         fill="white"
                                     />
                                 </svg>
-                            </div>
+                            </button>
                         </div>
                     </div>
                 </div>
