@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import { useContractReads, useContractRead } from "wagmi";
 import CertificateDashboard from "../components/CertificateDashboard";
 import Certificate from "../../consign-contracts/abi/Certificate.json";
-import { decodeFunctionData } from "viem";
+import { Address, decodeFunctionData } from "viem";
 import type {
   ExtractAbiFunctionNames,
   AbiParametersToPrimitiveTypes,
@@ -12,7 +12,7 @@ import type {
 import { multiSigWalletAbi } from "../abi";
 
 type CertificateType = {
-  num_approvals: BigInt;
+  num_approvals: number;
   title: string;
   image: string;
   to_addr: `0x${string}`;
@@ -67,7 +67,6 @@ export default function Dashboard() {
     return <div className="grid grid-cols-3 gap-6">{itemList}</div>;
   }
 
-
   let contracts: {
     address: `0x${string}` | undefined;
     abi: typeof multiSigWalletAbi;
@@ -89,6 +88,55 @@ export default function Dashboard() {
   const { data }: { data: Array<any> | undefined } = useContractReads({
     contracts,
   });
+
+  useEffect(() => {
+    console.log("data :", data);
+    if (!data) return;
+    setTransactions(
+      data.map((item) => ({
+        to: item.result[0],
+        value: Number(item.result[1]),
+        data: item.result[2],
+        executed: item.result[3],
+        numConfirmations: Number(item.result[4]),
+      }))
+    );
+  }, [data]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const mappedTransactions = await Promise.all(
+        transactions.map(async (item, index) => {
+          const data = item.data;
+          const { functionName, args }: { functionName: string; args: any } =
+            decodeFunctionData({
+              abi: Certificate.abi,
+              data: data as `0x${string}`,
+            });
+
+          console.log(functionName, args[1]);
+          const metadataResponse = await fetch(
+            args[1].replace("ipfs://", "https://gateway.ipfs.io/ipfs/")
+          );
+          const { name: title, image } = await metadataResponse.json();
+
+          const mappedItem = {
+            num_approvals: item.numConfirmations,
+            to_addr: item.to,
+            title: title,
+            image: image.replace("ipfs://", "https://gateway.ipfs.io/ipfs/"),
+          };
+          return mappedItem;
+        })
+      );
+
+      // Use the mappedTransactions as needed
+      console.log(mappedTransactions);
+      setDatas(mappedTransactions);
+    };
+
+    fetchData();
+  }, [transactions]);
 
   const { data: numConfirmationData } = useContractRead({
     address: multiSigWallets[0],
@@ -119,43 +167,43 @@ export default function Dashboard() {
     if (!multiSigWallets) return;
     setWallet(multiSigWallets[0]);
   }, [multiSigWallets]);
-
-  useEffect(() => {
-    async function createCertificateData(cert_data: any) {
-      if (cert_data) {
-        for (let i = 0; i < cert_data.length; i++) {
-          const item = cert_data[i];
-
-          const { functionName, args }: { functionName: string; args: any } =
-            decodeFunctionData({
-              abi: Certificate.abi,
-              data: item.result[2],
-            });
-
-          console.log(functionName, args[1]);
-          const metadataResponse = await fetch(
-            args[1].replace("ipfs://", "https://gateway.ipfs.io/ipfs/")
-          );
-          const metadata = await metadataResponse.json();
-
-          const mappedItem = {
-            num_approvals: item.result[4],
-            to_addr: item.result[0],
-            title: metadata.name,
-            image: metadata.image.replace(
-              "ipfs://",
-              "https://gateway.ipfs.io/ipfs/"
-            ),
-          };
-
-          console.log(mappedItem);
-          setDatas((datas) => [...datas, mappedItem]);
-        }
-      }
-    }
-    console.log(datas);
-    createCertificateData(data);
-  }, [data]);
+  //
+  // useEffect(() => {
+  //   async function createCertificateData(cert_data: any) {
+  //     if (cert_data) {
+  //       for (let i = 0; i < cert_data.length; i++) {
+  //         const item = cert_data[i];
+  //
+  //         const { functionName, args }: { functionName: string; args: any } =
+  //           decodeFunctionData({
+  //             abi: Certificate.abi,
+  //             data: item.result[2],
+  //           });
+  //
+  //         console.log(functionName, args[1]);
+  //         const metadataResponse = await fetch(
+  //           args[1].replace("ipfs://", "https://gateway.ipfs.io/ipfs/")
+  //         );
+  //         const metadata = await metadataResponse.json();
+  //
+  //         const mappedItem = {
+  //           num_approvals: item.result[4],
+  //           to_addr: item.result[0],
+  //           title: metadata.name,
+  //           image: metadata.image.replace(
+  //             "ipfs://",
+  //             "https://gateway.ipfs.io/ipfs/"
+  //           ),
+  //         };
+  //
+  //         console.log(mappedItem);
+  //         setDatas((datas) => [...datas, mappedItem]);
+  //       }
+  //     }
+  //   }
+  //   console.log(datas);
+  //   createCertificateData(data);
+  // }, [data]);
 
   return (
     <div className="bg-main">
@@ -169,7 +217,18 @@ export default function Dashboard() {
         <div className="text-2xl font-roboto mb-2">
           Certificates Pending Decision
         </div>
-        <List></List>
+        {datas.map((item, index) => {
+          return (
+            <CertificateDashboard
+              index={index}
+              num_approvals={item.num_approvals}
+              title={item.title}
+              image={item.image}
+              to_addr={item.to_addr}
+              numConfirmationRequired={numConfirmation!}
+            ></CertificateDashboard>
+          );
+        })}
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ type Props = {
   title: string;
   to_addr: address;
   image: string;
-  num_approvals: BigInt;
+  num_approvals: number;
   numConfirmationRequired: number;
 };
 
