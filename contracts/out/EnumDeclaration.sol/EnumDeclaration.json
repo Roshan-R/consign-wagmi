@@ -1,0 +1,77 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "linkReferences": {}
+  },
+  "ast": {
+    "absolutePath": "src/EnumDeclaration.sol",
+    "id": 33298,
+    "exportedSymbols": {
+      "BurnAuth": [
+        33297
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "39:100:44",
+    "nodes": [
+      {
+        "id": 33292,
+        "nodeType": "PragmaDirective",
+        "src": "39:24:44",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".17"
+        ]
+      },
+      {
+        "id": 33297,
+        "nodeType": "EnumDefinition",
+        "src": "65:73:44",
+        "nodes": [],
+        "canonicalName": "BurnAuth",
+        "members": [
+          {
+            "id": 33293,
+            "name": "IssuerOnly",
+            "nameLocation": "85:10:44",
+            "nodeType": "EnumValue",
+            "src": "85:10:44"
+          },
+          {
+            "id": 33294,
+            "name": "ReceiverOnly",
+            "nameLocation": "101:12:44",
+            "nodeType": "EnumValue",
+            "src": "101:12:44"
+          },
+          {
+            "id": 33295,
+            "name": "Both",
+            "nameLocation": "119:4:44",
+            "nodeType": "EnumValue",
+            "src": "119:4:44"
+          },
+          {
+            "id": 33296,
+            "name": "Neither",
+            "nameLocation": "129:7:44",
+            "nodeType": "EnumValue",
+            "src": "129:7:44"
+          }
+        ],
+        "name": "BurnAuth",
+        "nameLocation": "70:8:44"
+      }
+    ],
+    "license": "UNLICENSED"
+  },
+  "id": 44
+}

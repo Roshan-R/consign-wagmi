@@ -1,4 +1,4 @@
-import MainFactory from "../../consign-contracts/abi/MainFactory.json"
+import MainFactory from "../../contracts/abi/MainFactory.json"
 
 import {
     useContractRead,

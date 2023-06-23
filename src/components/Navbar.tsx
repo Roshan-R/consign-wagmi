@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { useEffect } from "react";
 import useConsignStore from "../stores/globalStore";
-import MainFactory from "../../consign-contracts/abi/MainFactory.json";
+import MainFactory from "../../contracts/abi/MainFactory.json";
 import { Address } from "../types";
 
 function Navbar() {

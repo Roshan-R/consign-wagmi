@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import Input from "../components/Input";
 import SubmitButton from "../components/SubmitButton";
 
-import MainFactory from "../../consign-contracts/abi/MainFactory.json"
+import MainFactory from "../../contracts/abi/MainFactory.json"
 import { useNavigate } from "react-router-dom";
 
 import {
